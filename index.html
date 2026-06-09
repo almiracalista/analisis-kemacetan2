@@ -437,4 +437,57 @@
         function buildTimeChart(labels, dataMin) {
             const ctx = document.getElementById('timeChart').getContext('2d');
             if (timeChartInstance) { timeChartInstance.destroy(); }
-      
+            
+            timeChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Menit',
+                        data: dataMin,
+                        backgroundColor: ['#84a59d', '#b0c4de', '#f5cac3'], // Warna Pastel Lembut
+                        borderRadius: 8
+                    }]
+                },
+                options: { responsive: true }
+            });
+        }
+
+        // FITUR KREASI: GRAFIK RATA-RATA KEMACETAN JALUR SEPANJANG HARI (LINE CHART COHESIVE)
+        function buildHourlyTrafficChart(routeName) {
+            const ctx = document.getElementById('hourlyTrafficChart').getContext('2d');
+            if (hourlyChartInstance) { hourlyChartInstance.destroy(); }
+
+            // Pola indeks rata-rata macet perkotaan (puncak jam 07-08 pagi dan 17-18 sore)
+            let jamLabels = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'];
+            let trenMacetKepadatan = [30, 85, 45, 50, 40, 75, 90, 60, 20]; // Persentase antrean macet
+
+            hourlyChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: jamLabels,
+                    datasets: [{
+                        label: `Tren Macet Jam Sibuk (%) - ${routeName}`,
+                        data: trenMacetKepadatan,
+                        borderColor: '#fb6f92', /* Pastel Pink Rose Line */
+                        backgroundColor: 'rgba(251, 111, 146, 0.15)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#fb6f92'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Tingkat Kepadatan Jalan (%)' } }
+                    }
+                }
+            });
+        }
+
+        window.onload = initMap;
+    </script>
+</body>
+</html>
