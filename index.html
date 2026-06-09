@@ -3,102 +3,120 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>OmniFlow Systems | Integrated Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniFlow Pro | Master Command Center</title>
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Leaflet Map CSS/JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
-        :root { --bg: #f8f9fa; --sidebar: #2c3e50; --card: #ffffff; --text: #34495e; --accent: #3498db; }
-        body { display: flex; height: 100vh; background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; }
-        aside { width: 260px; background: var(--sidebar); padding: 30px; color: white; display: flex; flex-direction: column; gap: 15px; }
+        :root { --sidebar: #0f172a; --bg: #f8fafc; --accent: #38bdf8; --card: #ffffff; --text: #1e293b; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { display: flex; height: 100vh; background: var(--bg); color: var(--text); overflow: hidden; }
+        
+        /* Sidebar Professional */
+        aside { width: 300px; background: var(--sidebar); color: white; padding: 40px 25px; display: flex; flex-direction: column; gap: 10px; }
+        .nav-link { padding: 15px 20px; border-radius: 12px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 15px; transition: 0.3s; }
+        .nav-link:hover, .nav-link.active { background: #1e293b; color: white; }
+        .nav-link.active { border-left: 4px solid var(--accent); }
+
+        /* Main Area */
         main { flex-grow: 1; padding: 40px; overflow-y: auto; }
-        .view { display: none; } .view.active { display: block; }
-        .card { background: var(--card); padding: 25px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .menu-link { padding: 12px; border-radius: 8px; cursor: pointer; color: #bdc3c7; font-weight: 500; transition: 0.3s; }
-        .menu-link.active { background: #34495e; color: white; border-left: 4px solid var(--accent); }
-        .heatmap { width: 100%; border-collapse: collapse; text-align: center; }
-        .heatmap td { padding: 12px; border: 1px solid #eee; }
+        .section { display: none; animation: fadeIn 0.5s; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .card { background: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
     </style>
 </head>
 <body>
 
-<aside>
-    <h2 style="margin-bottom:20px;">OmniFlow</h2>
-    <div class="menu-link active" onclick="show('map-view', this)"><i class="fa-solid fa-map"></i> Lokasi & Navigasi</div>
-    <div class="menu-link" onclick="show('weather-view', this)"><i class="fa-solid fa-cloud"></i> Analisis Cuaca</div>
-    <div class="menu-link" onclick="show('music-view', this)"><i class="fa-solid fa-music"></i> Media Player</div>
-</aside>
+    <aside>
+        <h1 style="margin-bottom: 40px; font-size: 24px;">OmniFlow <span style="color:var(--accent);">Pro</span></h1>
+        <div class="nav-link active" onclick="showSection('peta', this)"><i class="fa-solid fa-location-crosshairs"></i> Peta & Lokasi</div>
+        <div class="nav-link" onclick="showSection('analisis', this)"><i class="fa-solid fa-chart-line"></i> Analisis Kemacetan</div>
+        <div class="nav-link" onclick="showSection('hiburan', this)"><i class="fa-solid fa-music"></i> Cuaca & SZA Suite</div>
+    </aside>
 
-<main>
-    <!-- View 1: Peta & Data -->
-    <div id="map-view" class="view active">
-        <h2>Pusat Navigasi & Logistik</h2>
-        <div id="map" style="height: 300px; border-radius: 12px; margin: 20px 0;"></div>
-        <div class="grid">
+    <main>
+        <!-- Section 1: Peta -->
+        <section id="peta" class="section active">
+            <h2>Pusat Navigasi & Lokasi</h2>
+            <div id="map" style="height: 400px; border-radius: 20px; margin: 25px 0;"></div>
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3>Posisi Terkini</h3>
+                    <p id="latlon" style="margin: 15px 0;">Menunggu deteksi GPS...</p>
+                    <button onclick="getGPS()" style="padding: 10px 20px; background:var(--accent); border:none; border-radius:8px; cursor:pointer;">Update Posisi</button>
+                </div>
+                <div class="card">
+                    <h3>Atur Destinasi</h3>
+                    <input type="text" placeholder="Masukkan lokasi tujuan..." style="width:100%; padding:15px; border-radius:10px; border:1px solid #ddd; margin-top:10px;">
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Analisis -->
+        <section id="analisis" class="section">
+            <h2>Analisis Jalur Alternatif</h2>
             <div class="card">
-                <h4>Status GPS</h4>
-                <div id="gps-info">Tekan tombol untuk deteksi posisi.</div>
-                <button onclick="updateGPS()" style="margin-top:10px; cursor:pointer;">Update Posisi</button>
+                <canvas id="macetChart" height="100"></canvas>
             </div>
             <div class="card">
-                <h4>Kalkulasi Biaya</h4>
-                <input type="number" id="menit" value="30"> Menit Macet
-                <button onclick="hitung()">Hitung Estimasi</button>
-                <div id="result" style="margin-top:10px;">Biaya: -</div>
+                <h3>Logika Efisiensi</h3>
+                <p>Data berikut membandingkan waktu tempuh antara jalur utama yang sedang padat dengan dua jalur alternatif yang tersedia secara *real-time*.</p>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <!-- View 2: Analisis Cuaca -->
-    <div id="weather-view" class="view">
-        <h2>Analisis Kondisi & Dampak Cuaca</h2>
-        <div class="card">
-            <canvas id="trafficChart"></canvas>
-        </div>
-    </div>
+        <!-- Section 3: Hiburan -->
+        <section id="hiburan" class="section">
+            <h2>Cuaca & SZA Media Suite</h2>
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3>Kondisi Cuaca</h3>
+                    <p style="font-size: 40px; margin: 20px 0;"><i class="fa-solid fa-cloud-showers-heavy"></i></p>
+                    <p>Hujan Ringan (26°C) - Jalanan Licin</p>
+                </div>
+                <div class="card">
+                    <h3>SZA - Official Playlist</h3>
+                    <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4YhG4C4Bv1l" width="100%" height="200" frameBorder="0"></iframe>
+                </div>
+            </div>
+        </section>
+    </main>
 
-    <!-- View 3: Media Player -->
-    <div id="music-view" class="view">
-        <h2>SZA - The Ultimate Collection</h2>
-        <div class="card">
-            <!-- Playlist SZA Essentials Official -->
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4YhG4C4Bv1l" width="100%" height="380" frameBorder="0" allow="autoplay; encrypted-media"></iframe>
-            <p style="font-size:12px; margin-top:15px; color:#7f8c8d;">
-                *Klik ikon mikrofon di kanan bawah player Spotify untuk melihat lirik secara real-time.*
-            </p>
-        </div>
-    </div>
-</main>
+    <script>
+        function showSection(id, el) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            el.classList.add('active');
+        }
 
-<script>
-    function show(id, el) {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        el.classList.add('active');
-    }
+        // Map Init
+        const map = L.map('map').setView([-6.2088, 106.8456], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-    const map = L.map('map').setView([-6.2088, 106.8456], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        function getGPS() {
+            navigator.geolocation.getCurrentPosition(p => {
+                document.getElementById('latlon').innerText = `Lat: ${p.coords.latitude.toFixed(4)} | Lon: ${p.coords.longitude.toFixed(4)}`;
+            });
+        }
 
-    function updateGPS() {
-        navigator.geolocation.getCurrentPosition(p => {
-            document.getElementById('gps-info').innerText = `Lokasi: ${p.coords.latitude.toFixed(4)}, ${p.coords.longitude.toFixed(4)}`;
+        // Chart Init
+        new Chart(document.getElementById('macetChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Jalur Utama (Macet)', 'Alternatif 1', 'Alternatif 2'],
+                datasets: [{ label: 'Estimasi Menit', data: [75, 40, 52], backgroundColor: ['#ef4444', '#22c55e', '#3b82f6'] }]
+            }
         });
-    }
-
-    function hitung() {
-        let mnt = document.getElementById('menit').value;
-        document.getElementById('result').innerText = `Estimasi kerugian: Rp ${(mnt * 600).toLocaleString()}`;
-    }
-
-    new Chart(document.getElementById('trafficChart'), {
-        type: 'line',
-        data: { labels: ['Pagi', 'Siang', 'Sore'], datasets: [{ label: 'Tingkat Kepadatan', data: [20, 70, 90], borderColor: '#3498db' }] }
-    });
-</script>
+    </script>
 </body>
 </html>
