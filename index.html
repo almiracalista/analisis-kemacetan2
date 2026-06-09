@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PastelTraffic Ultimate AI - Congestion Analytics Dashboard</title>
+    <title>PastelTraffic Ultimate AI (GPS Sync) - Congestion Analytics Dashboard</title>
     
     <!-- Google Fonts & FontAwesome -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -49,7 +49,7 @@
             display: flex; align-items: center; gap: 14px; padding: 14px 18px;
             border-radius: var(--radius-md); cursor: pointer; font-weight: 600; color: var(--text-sub); transition: 0.3s;
         }
-        .menu-link.active, .menu-link:hover { background-color: var(--active-pastel, #cbdcd7); color: var(--text-main); }
+        .menu-link.active, .menu-link:hover { background-color: #cbdcd7; color: var(--text-main); }
         .menu-link i { color: #52796f; width: 20px; }
 
         /* MAIN WORKSPACE */
@@ -70,8 +70,8 @@
         .grid-layout-2-1 { display: grid; grid-template-columns: 1.6fr 1fr; gap: 25px; }
         .grid-layout-3-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 25px; }
         
-        .chart-card { background: var(--card-bg); padding: 25px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); display: flex; flex-direction: column; justify-content: space-between; }
-        .chart-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
+        .chart-card { background: var(--card-bg); padding: 25px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
+        .chart-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
 
         /* HEATMAP TABLE */
         .heatmap-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; }
@@ -88,22 +88,24 @@
         .indicator-dot { width: 10px; height: 10px; border-radius: 50%; shrink: 0; }
 
         /* CALCULATOR PANEL */
-        .calc-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+        .calc-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 5px; }
         .calc-field label { font-size: 12px; font-weight: 600; color: var(--text-sub); }
         .calc-field input, .custom-select { padding: 11px; border: 1px solid #e9ecef; border-radius: 8px; font-size: 13px; outline: none; background: #f8f9fa; width: 100%; }
         .calc-btn { padding: 12px; background: var(--accent-sage); border: none; color: white; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; width: 100%; }
         .calc-btn:hover { background: #6b8c85; }
-        .calc-result-box { margin-top: 12px; padding: 12px; background: #edf6f4; border-radius: 8px; font-size: 12px; font-weight: 600; line-height: 1.6; }
+        .calc-result-box { margin-top: 5px; padding: 12px; background: #edf6f4; border-radius: 8px; font-size: 12px; font-weight: 600; line-height: 1.6; }
 
-        /* NEW FEATURE 1: WEATHER MULTIPLIER BADGES */
+        /* WEATHER MULTIPLIER BADGES */
         .weather-btn-group { display: flex; gap: 10px; margin-bottom: 15px; }
         .weather-btn { flex: 1; padding: 8px; border: 1px solid #e9ecef; border-radius: 8px; font-size: 12px; font-weight: 600; background: #f8f9fa; cursor: pointer; transition: 0.2s; text-align: center; }
         .weather-btn.active { background: #e3f2fd; border-color: #90caf9; color: #0d47a1; }
 
-        /* NEW FEATURE 2: ROUTE SCORECARD */
-        .score-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-top: 5px; text-align: center; }
+        /* DETEKSI LOKASI & ROUTE SCORECARD */
+        .score-badge { display: block; padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-top: 5px; text-align: center; line-height: 1.4; }
+        .gps-btn { background: #e8f5e9; border: 1px dashed #81c784; color: #2e7d32; padding: 10px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; transition: 0.2s; }
+        .gps-btn:hover { background: #c8e6c9; }
 
-        /* NEW FEATURE 3: AUDIO MOOD MATCH CARDS */
+        /* AUDIO MOOD MATCH CARDS */
         .mood-box { display: flex; align-items: center; gap: 12px; background: #fafafa; border-radius: var(--radius-md); padding: 12px; border-left: 4px solid var(--accent-sage); }
         .mood-icon { font-size: 20px; color: #52796f; }
         .mood-details h5 { font-size: 13px; font-weight: 700; }
@@ -135,10 +137,10 @@
         <div class="header-dashboard">
             <div>
                 <h2>Dashboard Sistem Manajemen Kemacetan</h2>
-                <p>Pemantauan cerdas multi-fitur, kalkulator kerugian, dampak cuaca, serta kenyamanan berkendara.</p>
+                <p>Pemantauan cerdas multi-fitur, kalkulator kerugian, deteksi GPS, dampak cuaca, serta kenyamanan berkendara.</p>
             </div>
             <div style="font-size: 12px; font-weight: 600; background: white; padding: 8px 16px; border-radius: 30px; box-shadow: var(--shadow-soft);">
-                <i class="fa-solid fa-shield-halved" style="color:var(--accent-sage);"></i> Zona Pengawasan Utama Jakarta
+                <i class="fa-solid fa-shield-halved" style="color:var(--accent-sage);"></i> Zona Pengawasan Utama Aktif
             </div>
         </div>
 
@@ -162,12 +164,11 @@
             </div>
         </div>
 
-        <!-- ROW 1: CORE GRAPHS + WEEKLY HEATMAP + [NEW] WEATHER MODIFIER -->
+        <!-- ROW 1: CORE GRAPHS + WEEKLY HEATMAP + WEATHER MODIFIER -->
         <div class="grid-layout-2-1">
             <div class="chart-card">
                 <h3><i class="fa-solid fa-chart-area" style="color:var(--accent-sage)"></i> Fluktuasi Kepadatan Jalan & Dampak Faktor Cuaca</h3>
                 
-                <!-- NEW FEATURE 1: WEATHER MULTIPLIER BUTTONS -->
                 <div class="weather-btn-group">
                     <button class="weather-btn active" id="w-clear" onclick="changeWeatherFactor('clear')"><i class="fa-solid fa-sun" style="color:#f9a825"></i> Cerah Normal</button>
                     <button class="weather-btn" id="w-drizzle" onclick="changeWeatherFactor('drizzle')"><i class="fa-solid fa-cloud-rain" style="color:#64b5f6"></i> Gerimis (+15%)</button>
@@ -219,7 +220,7 @@
             </div>
         </div>
 
-        <!-- ROW 2: LIVE SCANNER + LOSS CALCULATOR + [NEW] ROUTE FEASIBILITY SCORECARD & MOOD AUDIO -->
+        <!-- ROW 2: LIVE SCANNER + LOSS CALCULATOR + GEOLOCATION & ALTERNATIVES -->
         <div class="grid-layout-3-col">
             
             <!-- CORE FEATURE: LIVE SCANNER LOG -->
@@ -254,22 +255,34 @@
                 </div>
             </div>
 
-            <!-- [NEW] COMBINED NEW FEATURES: ROUTE SCORECARD & MOOD AUDIO MATCH -->
-            <div class="chart-card" style="gap: 15px;">
+            <!-- COMBINED: FITUR DETEKSI GPS PINTAR + JALUR ALTERNATIF + AUDIO MOOD -->
+            <div class="chart-card" style="gap: 12px;">
+                
+                <!-- NEW ADDED FEATURE: LIVE GPS TRACKER DETECTOR -->
                 <div>
-                    <h3><i class="fa-solid fa-map-location-dot" style="color:#6b8c85"></i> Skor Kelayakan Alternatif</h3>
+                    <h3><i class="fa-solid fa-location-crosshairs" style="color:#2e7d32;"></i> Fitur Deteksi Lokasi Saya</h3>
+                    <button class="gps-btn" onclick="deteksiGpsSekarang()">
+                        <i class="fa-solid fa-satellite-dish"></i> Sinkronisasi GPS Sekarang
+                    </button>
+                    <div id="gps-status-output">
+                        <span class="score-badge" style="background:#f1f3f5; color:#495057;">GPS Belum Disinkronkan</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h3><i class="fa-solid fa-map-location-dot" style="color:#6b8c85"></i> Skor Kelayakan Jalur</h3>
                     <select class="custom-select" id="route-selector" onchange="updateRouteFeasibility()">
                         <option value="sudirman">Via Jalur Sudirman-Thamrin</option>
                         <option value="casablanca">Via Jalur Kasablanka Flyover</option>
                         <option value="gatot">Via Arteri Gatot Subroto</option>
                     </select>
-                    <div id="route-score-area" style="margin-top:8px;">
-                        <span class="score-badge" style="background:var(--pastel-green); color:#1b4332;"><i class="fa-solid fa-circle-check"></i> Skor: 85/100 (Sangat Layak Lewat)</span>
+                    <div id="route-score-area" style="margin-top:4px;">
+                        <span class="score-badge" style="background:var(--pastel-green); color:#1b4332;"><i class="fa-solid fa-circle-check"></i> Skor: 85/100 (Sangat Layak)</span>
                     </div>
                 </div>
 
-                <div style="border-top: 1px solid #edf2f4; padding-top: 10px;">
-                    <h3 style="margin-bottom:10px;"><i class="fa-solid fa-headphones-simple" style="color:#fb6f92"></i> Traffic Audio Recommendation</h3>
+                <div style="border-top: 1px solid #edf2f4; padding-top: 5px;">
+                    <h3 style="margin-bottom:5px;"><i class="fa-solid fa-headphones-simple" style="color:#fb6f92"></i> Traffic Audio Recommendation</h3>
                     <div class="mood-box">
                         <div class="mood-icon" id="mood-icon-fa"><i class="fa-solid fa-music"></i></div>
                         <div class="mood-details">
@@ -284,7 +297,7 @@
     </main>
 
     <script>
-        // INISIALISASI GRAFIK UTAMA
+        // ENGINE UTAMA GRAFIK
         let chartInstance;
         const ctx = document.getElementById('trafficWaveChart').getContext('2d');
         
@@ -326,7 +339,41 @@
             });
         }
 
-        // NEW FEATURE 1 ENGINE: UBAH GRAFIK BERDASARKAN CUACA
+        // FEATURE ENGINE 1: AMBIL LOKASI AKTUAL USER (HTML5 GEOLOCATION API)
+        function deteksiGpsSekarang() {
+            const output = document.getElementById("gps-status-output");
+            
+            if (navigator.geolocation) {
+                output.innerHTML = `<span class="score-badge" style="background:#fff3cd; color:#856404;"><i class="fa-solid fa-spinner fa-spin"></i> Menghubungi Satelit GPS...</span>`;
+                
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude.toFixed(5);
+                        const lon = position.coords.longitude.toFixed(5);
+                        
+                        // Menampilkan koordinat asli di interface
+                        output.innerHTML = `
+                            <span class="score-badge" style="background:var(--pastel-green); color:#1b4332;">
+                                <i class="fa-solid fa-location-dot"></i> Terdeteksi: ${lat}, ${lon}<br>
+                                <small style="font-weight:normal">Radius Anda terpantau Ramai Lancar</small>
+                            </span>
+                        `;
+                        
+                        // Sentuhan interaktif: Beri efek perubahan visual acak saat lokasi berubah
+                        document.getElementById("kpi-traffic").innerText = "36%";
+                    },
+                    (error) => {
+                        let pesanError = "Izin GPS Ditolak Browser";
+                        if(error.code == error.POSITION_UNAVAILABLE) pesanError = "Sinyal GPS Tidak Akurat";
+                        output.innerHTML = `<span class="score-badge" style="background:var(--pastel-red); color:#ca0b4a;"><i class="fa-solid fa-circle-exclamation"></i> Gagal: ${pesanError}</span>`;
+                    }
+                );
+            } else {
+                output.innerHTML = `<span class="score-badge" style="background:var(--pastel-red); color:#ca0b4a;">Browser Tidak Mendukung GPS</span>`;
+            }
+        }
+
+        // FEATURE ENGINE 2: UBAH GRAFIK BERDASARKAN CUACA
         function changeWeatherFactor(type) {
             document.querySelectorAll('.weather-btn').forEach(btn => btn.classList.remove('active'));
             let multiplier = 1;
@@ -352,21 +399,21 @@
             buildChart(multiplier);
         }
 
-        // NEW FEATURE 2 ENGINE: SELEKTOR SKOR JALUR
+        // FEATURE ENGINE 3: SELEKTOR SKOR JALUR
         function updateRouteFeasibility() {
             const select = document.getElementById("route-selector").value;
             const area = document.getElementById("route-score-area");
 
             if (select === 'sudirman') {
-                area.innerHTML = `<span class="score-badge" style="background:var(--pastel-green); color:#1b4332;"><i class="fa-solid fa-circle-check"></i> Skor: 85/100 (Sangat Layak Lewat)</span>`;
+                area.innerHTML = `<span class="score-badge" style="background:var(--pastel-green); color:#1b4332;"><i class="fa-solid fa-circle-check"></i> Skor: 85/100 (Sangat Layak)</span>`;
             } else if (select === 'casablanca') {
-                area.innerHTML = `<span class="score-badge" style="background:var(--pastel-yellow); color:#856404;"><i class="fa-solid fa-triangle-exclamation"></i> Skor: 51/100 (Padat - Agak Tersendat)</span>`;
+                area.innerHTML = `<span class="score-badge" style="background:var(--pastel-yellow); color:#856404;"><i class="fa-solid fa-triangle-exclamation"></i> Skor: 51/100 (Padat Merayap)</span>`;
             } else if (select === 'gatot') {
-                area.innerHTML = `<span class="score-badge" style="background:var(--pastel-red); color:#ca0b4a;"><i class="fa-solid fa-circle-xmark"></i> Skor: 28/100 (Danger - Hindari Jalur Ini)</span>`;
+                area.innerHTML = `<span class="score-badge" style="background:var(--pastel-red); color:#ca0b4a;"><i class="fa-solid fa-circle-xmark"></i> Skor: 28/100 (Macet Parah - Hindari)</span>`;
             }
         }
 
-        // NEW FEATURE 3 ENGINE: REKOMENDASI AUDIO AUTOMATION
+        // FEATURE ENGINE 4: REKOMENDASI AUDIO AUTOMATION
         function updateAudioRecommendation(condition) {
             const title = document.getElementById("mood-title");
             const desc = document.getElementById("mood-desc");
@@ -383,7 +430,7 @@
             }
         }
 
-        // CORE FEATURE ENGINE: LIVE INCIDENT UPDATER (AUTOMATED TIMER FEED)
+        // FEATURE ENGINE 5: LIVE INCIDENT UPDATER (AUTOMATED TIMER FEED)
         const sampleStreets = ["Slipi", "Kuningan", "Tol Tomang", "Kramat Raya", "Manggarai", "Mampang Prapatan"];
         const sampleIncidents = [
             { txt: "padat merayap efek bubaran proyek drainase.", col: "#856404" },
@@ -409,7 +456,7 @@
             if (box.children.length > 4) { box.removeChild(box.lastChild); }
         }, 7000);
 
-        // CORE FEATURE ENGINE: KALKULATOR RUGI MACET
+        // FEATURE ENGINE 6: KALKULATOR RUGI MACET
         function hitungKerugianMacet() {
             let mnt = parseFloat(document.getElementById("input-menit").value) || 0;
             let ratio = parseFloat(document.getElementById("input-bbm").value) || 12;
