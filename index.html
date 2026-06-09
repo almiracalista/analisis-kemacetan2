@@ -4,28 +4,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pencari Rute Bebas Macet</title>
+    <title>Dashboard Rute & Lalu Lintas</title>
+    <!-- Import Library Chart.js untuk Grafik -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-        #map { height: 500px; width: 100%; margin-top: 20px; border-radius: 8px; }
-        .controls { display: flex; gap: 10px; margin-bottom: 10px; }
-        input[type="text"] { flex: 1; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; }
-        button { padding: 10px 20px; font-size: 16px; background-color: #4285F4; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background-color: #357ae8; }
-        #info { margin-top: 10px; font-weight: bold; color: #333; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { margin: 0; display: flex; height: 100vh; background-color: #f4f7f6; }
+        
+        /* Layout Sidebar */
+        #sidebar {
+            width: 380px;
+            background: white;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            z-index: 10;
+        }
+        
+        /* Layout Peta */
+        #map-container { flex: 1; position: relative; }
+        #map { width: 100%; height: 100%; }
+
+        h2 { margin: 0 0 10px 0; font-size: 20px; color: #2c3e50; }
+        p.status { font-size: 13px; color: #7f8c8d; margin-top: -5px; }
+
+        /* Styling Input & Tombol */
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        input[type="text"] {
+            padding: 12px; font-size: 14px;
+            border: 1px solid #ddd; border-radius: 6px;
+            outline: none; transition: 0.3s;
+        }
+        input[type="text"]:focus { border-color: #3498db; }
+        button {
+            padding: 12px; font-size: 14px; font-weight: bold;
+            background-color: #3498db; color: white;
+            border: none; border-radius: 6px; cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover { background-color: #2980b9; }
+
+        /* Styling Kartu Data Rute */
+        .route-card {
+            background: #f8f9fa; border-left: 4px solid #3498db;
+            padding: 10px 15px; border-radius: 4px;
+            margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .route-card h4 { margin: 0 0 5px 0; font-size: 14px; color: #2c3e50; }
+        .route-card p { margin: 0; font-size: 13px; color: #555; }
+        
+        /* Warna berbeda untuk rute alternatif */
+        .route-alt { border-left-color: #95a5a6; }
+
+        /* Styling Grafik */
+        .chart-container {
+            background: white; padding: 10px;
+            border-radius: 6px; border: 1px solid #eee;
+        }
     </style>
 </head>
 <body>
 
-    <h2>Aplikasi Pendeteksi Lokasi & Pencari Rute</h2>
-    
-    <div class="controls">
-        <input type="text" id="destination" placeholder="Masukkan lokasi tujuan...">
-        <button onclick="findRoute()">Cari Rute</button>
+    <!-- SIDEBAR MENU & DATA -->
+    <div id="sidebar">
+        <div>
+            <h2>Navigasi Pintar</h2>
+            <p class="status" id="location-status">Mendeteksi lokasi Anda...</p>
+        </div>
+
+        <!-- Menu Input -->
+        <div class="input-group">
+            <label for="destination"><b>Tujuan Anda:</b></label>
+            <input type="text" id="destination" placeholder="Contoh: Stasiun Gambir...">
+            <button onclick="findRoute()">Cari Rute Terbaik</button>
+        </div>
+
+        <!-- Pemisah Menu -->
+        <hr style="border: 0; border-top: 1px solid #ddd; width: 100%;">
+
+        <!-- Menu Data Rute -->
+        <div>
+            <h2>Data Rute Alternatif</h2>
+            <div id="route-data-container">
+                <p style="font-size: 13px; color: #888;">Belum ada rute yang dicari.</p>
+            </div>
+        </div>
+
+        <!-- Menu Grafik -->
+        <div class="chart-container" style="display: none;" id="chart-section">
+            <h2>Grafik Waktu Tempuh</h2>
+            <canvas id="routeChart"></canvas>
+        </div>
     </div>
-    
-    <div id="info">Menunggu deteksi lokasi...</div>
-    <div id="map"></div>
+
+    <!-- AREA PETA -->
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
 
     <!-- Ganti 'YOUR_API_KEY' dengan API Key Google Maps Anda -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
@@ -33,22 +111,36 @@
     <script>
         let map, directionsService, directionsRenderer, trafficLayer;
         let currentLocation = null;
+        let routeChartInstance = null; // Variabel untuk menyimpan instance grafik
 
+        // 1. Inisialisasi Peta
         function initMap() {
-            // Inisialisasi Peta
             map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 12,
-                center: { lat: -6.200000, lng: 106.816666 }, // Default ke Jakarta
+                center: { lat: -6.200000, lng: 106.816666 },
+                mapTypeControl: false,
+                streetViewControl: false
             });
 
             directionsService = new google.maps.DirectionsService();
-            directionsRenderer = new google.maps.DirectionsRenderer({ map: map });
+            directionsRenderer = new google.maps.DirectionsRenderer({ 
+                map: map,
+                panel: null // Kita buat custom panel sendiri di sidebar
+            });
             
-            // Tambahkan layer lalu lintas (warna merah = macet, hijau = lancar)
             trafficLayer = new google.maps.TrafficLayer();
             trafficLayer.setMap(map);
 
-            // Coba deteksi lokasi pengguna
+            // Autocomplete Tujuan
+            let input = document.getElementById("destination");
+            let autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.bindTo("bounds", map);
+
+            detectLocation();
+        }
+
+        // 2. Deteksi Lokasi Saat Ini
+        function detectLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
@@ -58,48 +150,40 @@
                         };
                         map.setCenter(currentLocation);
                         map.setZoom(15);
-                        document.getElementById("info").innerText = "Lokasi Anda berhasil dideteksi!";
+                        document.getElementById("location-status").innerText = "Lokasi Anda saat ini (Akurat).";
+                        document.getElementById("location-status").style.color = "#27ae60";
                         
-                        // Tandai lokasi kita di peta
                         new google.maps.Marker({
-                            position: currentLocation,
-                            map: map,
-                            title: "Lokasi Anda"
+                            position: currentLocation, map: map,
+                            icon: { path: google.maps.SymbolPath.CIRCLE, scale: 8, fillColor: '#3498db', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 }
                         });
                     },
-                    () => {
-                        document.getElementById("info").innerText = "Gagal mendeteksi lokasi. Pastikan GPS/Location aktif.";
+                    (error) => {
+                        document.getElementById("location-status").innerText = "Gagal mendeteksi lokasi. Harap nyalakan GPS.";
+                        document.getElementById("location-status").style.color = "#e74c3c";
                     }
                 );
-            } else {
-                document.getElementById("info").innerText = "Browser Anda tidak mendukung deteksi lokasi.";
             }
-
-            // Autocomplete untuk input tujuan
-            let input = document.getElementById("destination");
-            let autocomplete = new google.maps.places.Autocomplete(input);
-            autocomplete.bindTo("bounds", map);
         }
 
+        // 3. Cari Rute
         function findRoute() {
             let destination = document.getElementById("destination").value;
 
             if (!currentLocation) {
-                alert("Lokasi Anda belum dideteksi. Harap tunggu atau izinkan akses lokasi.");
-                return;
+                alert("Tunggu sebentar, lokasi Anda sedang dideteksi."); return;
             }
             if (!destination) {
-                alert("Harap masukkan lokasi tujuan.");
-                return;
+                alert("Harap masukkan tujuan terlebih dahulu."); return;
             }
 
             let request = {
                 origin: currentLocation,
                 destination: destination,
                 travelMode: google.maps.TravelMode.DRIVING,
-                provideRouteAlternatives: true, // Meminta rute alternatif
+                provideRouteAlternatives: true,
                 drivingOptions: {
-                    departureTime: new Date(),  // Menghitung prediksi lalu lintas saat ini
+                    departureTime: new Date(), 
                     trafficModel: 'bestguess'
                 }
             };
@@ -107,16 +191,99 @@
             directionsService.route(request, (result, status) => {
                 if (status == google.maps.DirectionsStatus.OK) {
                     directionsRenderer.setDirections(result);
-                    
-                    let routes = result.routes;
-                    document.getElementById("info").innerText = `Ditemukan ${routes.length} rute alternatif. Rute terbaik/tercepat ditampilkan otomatis.`;
+                    processRouteData(result.routes);
                 } else {
-                    document.getElementById("info").innerText = "Rute tidak ditemukan: " + status;
+                    alert("Rute tidak ditemukan. Coba lokasi lain.");
                 }
             });
         }
 
-        // Panggil initMap setelah halaman dimuat
+        // 4. Proses Data untuk Sidebar & Grafik
+        function processRouteData(routes) {
+            let container = document.getElementById("route-data-container");
+            container.innerHTML = ""; // Bersihkan data lama
+            
+            let chartLabels = [];
+            let chartData = [];
+
+            routes.forEach((route, index) => {
+                // Ambil info dari rute
+                let leg = route.legs[0];
+                let distance = leg.distance.text;
+                let duration = leg.duration.text;
+                let durationValue = leg.duration.value / 60; // Konversi ke menit untuk grafik
+                
+                // Cek rute utama atau alternatif
+                let isMain = (index === 0);
+                let title = isMain ? "Rute Utama Tercepat" : `Alternatif ${index}`;
+                let cardClass = isMain ? "route-card" : "route-card route-alt";
+                
+                // Tambahkan elemen HTML ke sidebar
+                let cardHtml = `
+                    <div class="${cardClass}">
+                        <h4>${title}</h4>
+                        <p><b>Jarak:</b> ${distance}</p>
+                        <p><b>Estimasi Waktu:</b> ${duration}</p>
+                        <p style="font-size:11px; margin-top:5px; color:#7f8c8d;">Melalui: ${route.summary}</p>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
+
+                // Simpan data untuk grafik
+                chartLabels.push(title);
+                chartData.push(durationValue.toFixed(0)); // Dibulatkan
+            });
+
+            // Munculkan container grafik dan buat grafik
+            document.getElementById("chart-section").style.display = "block";
+            createChart(chartLabels, chartData);
+        }
+
+        // 5. Membuat Grafik dengan Chart.js
+        function createChart(labels, data) {
+            const ctx = document.getElementById('routeChart').getContext('2d');
+            
+            // Hancurkan grafik lama jika sudah ada (agar tidak tumpang tindih)
+            if (routeChartInstance) {
+                routeChartInstance.destroy();
+            }
+
+            routeChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Waktu Tempuh (Menit)',
+                        data: data,
+                        backgroundColor: [
+                            'rgba(52, 152, 219, 0.7)', // Biru untuk utama
+                            'rgba(149, 165, 166, 0.7)', // Abu-abu untuk alternatif 1
+                            'rgba(149, 165, 166, 0.7)'  // Abu-abu untuk alternatif 2 dst
+                        ],
+                        borderColor: [
+                            'rgba(41, 128, 185, 1)',
+                            'rgba(127, 140, 141, 1)',
+                            'rgba(127, 140, 141, 1)'
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Menit' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false } // Sembunyikan legend karena sudah jelas dari label
+                    }
+                }
+            });
+        }
+
         window.onload = initMap;
     </script>
 </body>
