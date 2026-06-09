@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PastelTraffic - Congestion Analytics Dashboard</title>
+    <title>PastelTraffic Ultimate AI - Congestion Analytics Dashboard</title>
     
     <!-- Google Fonts & FontAwesome -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -15,23 +15,23 @@
 
     <style>
         :root {
-            /* Palette Pastel Dashboard */
-            --bg-base: #f6f8f7;
-            --sidebar-bg: #eaf1ee;
+            /* Palette Pastel Premium */
+            --bg-base: #f4f7f6;
+            --sidebar-bg: #e5ece9;
             --card-bg: #ffffff;
-            --text-main: #2b3a3a;
-            --text-sub: #758a88;
+            --text-main: #2f3e46;
+            --text-sub: #6b7a82;
             
             /* Status Pastel */
-            --pastel-red: #ffccd5;     /* Macet */
-            --pastel-yellow: #ffeb3b40; /* Padat Merayap */
-            --pastel-green: #c7f9cc;    /* Lancar */
-            --pastel-blue: #ch7ff;     /* Info */
+            --pastel-red: #ffcad4;     /* Macet */
+            --pastel-yellow: #fde2e4;  /* Padat */
+            --pastel-green: #b7e4c7;   /* Lancar */
+            --pastel-blue: #d8e2dc;    /* Info */
             --accent-sage: #84a59d;
             
             --radius-lg: 20px;
             --radius-md: 12px;
-            --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.02);
+            --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.02);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -41,125 +41,145 @@
         aside {
             width: 280px; background-color: var(--sidebar-bg);
             padding: 35px 24px; display: flex; flex-direction: column; justify-content: space-between;
+            border-right: 1px solid rgba(0,0,0,0.02);
         }
-        .logo { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 20px; color: #4a6b62; }
-        .menu-group { list-style: none; margin-top: 50px; display: flex; flex-direction: column; gap: 8px; }
+        .logo { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 20px; color: #52796f; }
+        .menu-group { list-style: none; margin-top: 40px; display: flex; flex-direction: column; gap: 8px; }
         .menu-link {
             display: flex; align-items: center; gap: 14px; padding: 14px 18px;
             border-radius: var(--radius-md); cursor: pointer; font-weight: 600; color: var(--text-sub); transition: 0.3s;
         }
-        .menu-link.active, .menu-link:hover { background-color: #cbdcd7; color: var(--text-main); }
+        .menu-link.active, .menu-link:hover { background-color: var(--active-pastel, #cbdcd7); color: var(--text-main); }
         .menu-link i { color: #52796f; width: 20px; }
 
-        /* MAIN CONTENT AREA */
+        /* MAIN WORKSPACE */
         main { flex-grow: 1; padding: 35px; overflow-y: auto; height: 100%; display: flex; flex-direction: column; gap: 25px; }
         
         .header-dashboard { display: flex; justify-content: space-between; align-items: center; }
-        .header-dashboard h2 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
-        .header-dashboard p { color: var(--text-sub); font-size: 14px; }
+        .header-dashboard h2 { font-size: 25px; font-weight: 700; letter-spacing: -0.5px; }
+        .header-dashboard p { color: var(--text-sub); font-size: 13px; margin-top: 2px; }
 
-        /* KANBAN GRID STATS */
+        /* KPI GRID CARDS */
         .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-        .card-stat { background: var(--card-bg); padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); display: flex; justify-content: space-between; align-items: center; }
-        .stat-meta h4 { font-size: 12px; text-transform: uppercase; color: var(--text-sub); margin-bottom: 6px; letter-spacing: 0.5px; }
-        .stat-meta p { font-size: 24px; font-weight: 700; }
-        .stat-badge-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        
-        /* CHART LAYOUT TRIPLE PANEL */
-        .grid-charts { display: grid; grid-template-columns: 1.7fr 1fr; gap: 25px; }
-        .chart-card { background: var(--card-bg); padding: 25px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); }
-        .chart-card h3 { font-size: 16px; margin-bottom: 20px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .card-stat { background: var(--card-bg); padding: 22px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(0,0,0,0.01); }
+        .stat-meta h4 { font-size: 11px; text-transform: uppercase; color: var(--text-sub); margin-bottom: 6px; letter-spacing: 0.5px; }
+        .stat-meta p { font-size: 22px; font-weight: 700; }
+        .stat-badge-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
 
-        /* FITUR 1: TABLE HEATMAP JADWAL SIBUK */
-        .heatmap-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; text-align: center; }
+        /* MULTI-COLUMN LAYOUT */
+        .grid-layout-2-1 { display: grid; grid-template-columns: 1.6fr 1fr; gap: 25px; }
+        .grid-layout-3-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 25px; }
+        
+        .chart-card { background: var(--card-bg); padding: 25px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); display: flex; flex-direction: column; justify-content: space-between; }
+        .chart-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
+
+        /* HEATMAP TABLE */
+        .heatmap-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; }
         .heatmap-table th { font-weight: 600; padding: 8px; color: var(--text-sub); }
-        .heatmap-table td { padding: 12px 6px; border: 2px solid #fff; font-weight: bold; border-radius: 6px; }
-        .cell-lancar { background-color: var(--pastel-green); color: #2d6a4f; }
-        .cell-padat { background-color: #fde2e4; color: #a13d48; }
-        .cell-macet { background-color: var(--pastel-pink); color: #ca0b4a; }
+        .heatmap-table td { padding: 10px 6px; border: 2px solid #fff; font-weight: 700; border-radius: 6px; }
+        .cell-lancar { background-color: var(--pastel-green); color: #1b4332; }
+        .cell-padat { background-color: var(--pastel-yellow); color: #856404; }
+        .cell-macet { background-color: var(--pastel-red); color: #ca0b4a; }
 
-        /* LOWER GRID: FITUR KEREN BARU */
-        .grid-interactive { display: grid; grid-template-columns: 1fr 1.2fr; gap: 25px; }
-        
-        /* FITUR 2: LIVE COMMUTE SCANNER */
-        .scanner-container { display: flex; flex-direction: column; gap: 10px; max-height: 260px; overflow-y: auto; padding-right: 5px; }
-        .scanner-log { display: flex; align-items: center; gap: 12px; padding: 12px; background: #f8f9fa; border-radius: var(--radius-md); font-size: 13px; animation: slideIn 0.4s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        /* LIVE SCANNER LIST */
+        .scanner-container { display: flex; flex-direction: column; gap: 10px; max-height: 220px; overflow-y: auto; }
+        .scanner-log { display: flex; align-items: center; gap: 12px; padding: 12px; background: #f8f9fa; border-radius: var(--radius-md); font-size: 12px; line-height: 1.4; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
         .indicator-dot { width: 10px; height: 10px; border-radius: 50%; shrink: 0; }
 
-        /* FITUR 3: KALKULATOR RUGI MACET */
-        .calc-input-group { display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; }
-        .calc-field { display: flex; flex-direction: column; gap: 5px; }
+        /* CALCULATOR PANEL */
+        .calc-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
         .calc-field label { font-size: 12px; font-weight: 600; color: var(--text-sub); }
-        .calc-field input { padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; }
-        .calc-btn { padding: 12px; background: var(--accent-sage); border: none; color: white; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .calc-field input, .custom-select { padding: 11px; border: 1px solid #e9ecef; border-radius: 8px; font-size: 13px; outline: none; background: #f8f9fa; width: 100%; }
+        .calc-btn { padding: 12px; background: var(--accent-sage); border: none; color: white; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; width: 100%; }
         .calc-btn:hover { background: #6b8c85; }
-        .calc-result-box { margin-top: 15px; padding: 12px; background: #edf6f4; border-radius: 8px; font-size: 13px; font-weight: 600; line-height: 1.6; }
+        .calc-result-box { margin-top: 12px; padding: 12px; background: #edf6f4; border-radius: 8px; font-size: 12px; font-weight: 600; line-height: 1.6; }
 
+        /* NEW FEATURE 1: WEATHER MULTIPLIER BADGES */
+        .weather-btn-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        .weather-btn { flex: 1; padding: 8px; border: 1px solid #e9ecef; border-radius: 8px; font-size: 12px; font-weight: 600; background: #f8f9fa; cursor: pointer; transition: 0.2s; text-align: center; }
+        .weather-btn.active { background: #e3f2fd; border-color: #90caf9; color: #0d47a1; }
+
+        /* NEW FEATURE 2: ROUTE SCORECARD */
+        .score-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-top: 5px; text-align: center; }
+
+        /* NEW FEATURE 3: AUDIO MOOD MATCH CARDS */
+        .mood-box { display: flex; align-items: center; gap: 12px; background: #fafafa; border-radius: var(--radius-md); padding: 12px; border-left: 4px solid var(--accent-sage); }
+        .mood-icon { font-size: 20px; color: #52796f; }
+        .mood-details h5 { font-size: 13px; font-weight: 700; }
+        .mood-details p { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
     </style>
 </head>
 <body>
 
-    <!-- MENUS SIDEBAR -->
+    <!-- SIDEBAR NAVIGATION MENU -->
     <aside>
         <div>
             <div class="logo">
-                <i class="fa-solid fa-chart-pie-simple"></i>
-                <span>PastelTraffic AI</span>
+                <i class="fa-solid fa-compass-drafting"></i>
+                <span>PastelTraffic Pro</span>
             </div>
             <ul class="menu-group">
-                <li class="menu-link active"><i class="fa-solid fa-grid-2"></i> Ringkasan Utama</li>
-                <li class="menu-link"><i class="fa-solid fa-road-barrier"></i> Titik Macet</li>
-                <li class="menu-link"><i class="fa-solid fa-sliders"></i> Pengaturan</li>
+                <li class="menu-link active"><i class="fa-solid fa-chart-line"></i> Ringkasan Utama</li>
+                <li class="menu-link"><i class="fa-solid fa-cloud-sun-rain"></i> Matriks Cuaca</li>
+                <li class="menu-link"><i class="fa-solid fa-headphones"></i> Hiburan Jalan</li>
             </ul>
         </div>
         <div style="font-size: 11px; color: var(--text-sub); text-align: center;">
-            &copy; 2026 Traffic Optimization System
+            &copy; 2026 Traffic Optimization Suite
         </div>
     </aside>
 
-    <!-- CONTENT DATA -->
+    <!-- MAIN DASHBOARD DATA -->
     <main>
         <div class="header-dashboard">
             <div>
-                <h2>Dashboard Analisis Kepadatan Kota</h2>
-                <p>Pemantauan tren pergerakan kendaraan dan kalkulasi waktu tunggu jalan raya.</p>
+                <h2>Dashboard Sistem Manajemen Kemacetan</h2>
+                <p>Pemantauan cerdas multi-fitur, kalkulator kerugian, dampak cuaca, serta kenyamanan berkendara.</p>
             </div>
-            <div style="font-size: 13px; font-weight: 600; background: white; padding: 10px 18px; border-radius: 30px; box-shadow: var(--shadow-soft);">
-                <i class="fa-solid fa-calendar-day" style="color:var(--accent-sage);"></i> Wilayah DKI Jakarta & Sekitarnya
+            <div style="font-size: 12px; font-weight: 600; background: white; padding: 8px 16px; border-radius: 30px; box-shadow: var(--shadow-soft);">
+                <i class="fa-solid fa-shield-halved" style="color:var(--accent-sage);"></i> Zona Pengawasan Utama Jakarta
             </div>
         </div>
 
         <!-- KPI STATS CARDS -->
         <div class="grid-stats">
             <div class="card-stat">
-                <div class="stat-meta"><h4>Rata-Rata Macet Hari Ini</h4><p>42%</p></div>
-                <div class="stat-badge-icon" style="background:#fff3e0; color:#e65100;"><i class="fa-solid fa-traffic-light"></i></div>
+                <div class="stat-meta"><h4>Rata-Rata Macet Hari Ini</h4><p id="kpi-traffic">42%</p></div>
+                <div class="stat-badge-icon" style="background:#ffe5ec; color:#ca0b4a;"><i class="fa-solid fa-traffic-light"></i></div>
             </div>
             <div class="card-stat">
                 <div class="stat-meta"><h4>Waktu Terbuang / Bulan</h4><p>18.4 Jam</p></div>
-                <div class="stat-badge-icon" style="background:var(--pastel-pink); color:#ca0b4a;"><i class="fa-solid fa-hourglass-end"></i></div>
+                <div class="stat-badge-icon" style="background:#fde2e4; color:#a13d48;"><i class="fa-solid fa-hourglass-end"></i></div>
             </div>
             <div class="card-stat">
-                <div class="stat-meta"><h4>Kecepatan Rata-Rata</h4><p>24 Km/Jam</p></div>
+                <div class="stat-meta"><h4>Kecepatan Rata-Rata</h4><p id="kpi-speed">24 Km/Jam</p></div>
                 <div class="stat-badge-icon" style="background:var(--pastel-green); color:#1b4332;"><i class="fa-solid fa-gauge-high"></i></div>
             </div>
             <div class="card-stat">
-                <div class="stat-meta"><h4>Kerugian Finansial/Org</h4><p>Rp 320rb</p></div>
-                <div class="stat-badge-icon" style="background:#e1f5fe; color:#0288d1;"><i class="fa-solid fa-wallet"></i></div>
+                <div class="stat-meta"><h4>Kerugian Finansial/Org</h4><p>Rp 320.000</p></div>
+                <div class="stat-badge-icon" style="background:#e3f2fd; color:#0d47a1;"><i class="fa-solid fa-wallet"></i></div>
             </div>
         </div>
 
-        <!-- CHARTS GRAPH & WEEKLY HEATMAP -->
-        <div class="grid-charts">
+        <!-- ROW 1: CORE GRAPHS + WEEKLY HEATMAP + [NEW] WEATHER MODIFIER -->
+        <div class="grid-layout-2-1">
             <div class="chart-card">
-                <h3><i class="fa-solid fa-wave-square" style="color:var(--accent-sage)"></i> Fluktuasi Kepadatan Jalan (Per 2 Jam)</h3>
-                <canvas id="trafficWaveChart" height="110"></canvas>
+                <h3><i class="fa-solid fa-chart-area" style="color:var(--accent-sage)"></i> Fluktuasi Kepadatan Jalan & Dampak Faktor Cuaca</h3>
+                
+                <!-- NEW FEATURE 1: WEATHER MULTIPLIER BUTTONS -->
+                <div class="weather-btn-group">
+                    <button class="weather-btn active" id="w-clear" onclick="changeWeatherFactor('clear')"><i class="fa-solid fa-sun" style="color:#f9a825"></i> Cerah Normal</button>
+                    <button class="weather-btn" id="w-drizzle" onclick="changeWeatherFactor('drizzle')"><i class="fa-solid fa-cloud-rain" style="color:#64b5f6"></i> Gerimis (+15%)</button>
+                    <button class="weather-btn" id="w-storm" onclick="changeWeatherFactor('storm')"><i class="fa-solid fa-cloud-showers-water" style="color:#b00020"></i> Hujan Badai (+35%)</button>
+                </div>
+
+                <canvas id="trafficWaveChart" height="105"></canvas>
             </div>
             
-            <!-- FITUR 1: HEATMAP MINGGUAN -->
+            <!-- CORE FEATURE: HEATMAP MINGGUAN -->
             <div class="chart-card">
-                <h3><i class="fa-solid fa-calendar-week" style="color:#fb6f92"></i> Heatmap Jam Sibuk Mingguan</h3>
+                <h3><i class="fa-solid fa-calendar-week" style="color:#6b7a82"></i> Heatmap Jam Sibuk Mingguan</h3>
                 <table class="heatmap-table">
                     <thead>
                         <tr>
@@ -199,123 +219,218 @@
             </div>
         </div>
 
-        <!-- SECTION FITUR INTERAKTIF (LOWER GRID) -->
-        <div class="grid-interactive">
-            <!-- FITUR 2: LIVE SCANNER LOG SIMULATOR -->
+        <!-- ROW 2: LIVE SCANNER + LOSS CALCULATOR + [NEW] ROUTE FEASIBILITY SCORECARD & MOOD AUDIO -->
+        <div class="grid-layout-3-col">
+            
+            <!-- CORE FEATURE: LIVE SCANNER LOG -->
             <div class="chart-card">
-                <h3><i class="fa-solid fa-radar fa-spin" style="color:#0288d1"></i> Live Traffic Incident Scanner</h3>
+                <h3><i class="fa-solid fa-satellite-dish" style="color:#0288d1"></i> Live Traffic Incident Scanner</h3>
                 <div class="scanner-container" id="live-scanner-box">
                     <div class="scanner-log">
                         <div class="indicator-dot" style="background:#ca0b4a;"></div>
-                        <div><b>[08:12]</b> Tol Dalam Kota (Cawang) mengalami antrean kendaraan sepanjang 2.4 KM.</div>
+                        <div><b>[11:42]</b> Tol Grogol macet parah akibat antrean di gerbang tol otomatis.</div>
                     </div>
                     <div class="scanner-log">
-                        <div class="indicator-dot" style="background:#2d6a4f;"></div>
-                        <div><b>[08:09]</b> Sudirman - Thamrin terpantau ramai lancar berkat rekayasa uji coba lalin.</div>
+                        <div class="indicator-dot" style="background:#b7e4c7;"></div>
+                        <div><b>[11:35]</b> Arteri Rasuna Said terpantau kondusif & lancar siang ini.</div>
                     </div>
                 </div>
             </div>
 
-            <!-- FITUR 3: KALKULATOR BIAYA TEMPUH MACET -->
+            <!-- CORE FEATURE: KALKULATOR PEMBOROSAN MACET -->
             <div class="chart-card">
-                <h3><i class="fa-solid fa-calculator" style="color:var(--accent-sage)"></i> Kalkulator Pemborosan Kemacetan</h3>
-                <div class="calc-input-group">
-                    <div class="grid-stats" style="grid-template-columns:1fr 1fr; gap:10px;">
-                        <div class="calc-field">
-                            <label>Durasi Macet Harian (Menit)</label>
-                            <input type="number" id="input-menit" value="45" placeholder="Contoh: 30">
-                        </div>
-                        <div class="calc-field">
-                            <label>Konsumsi BBM (Km/Liter)</label>
-                            <input type="number" id="input-bbm" value="12" placeholder="Contoh: 12">
-                        </div>
-                    </div>
-                    <button class="calc-btn" onclick="hitungKerugianMacet()">Hitung Pemborosan Pribadi</button>
+                <h3><i class="fa-solid fa-calculator" style="color:var(--accent-sage)"></i> Kalkulator Kerugian Kemacetan</h3>
+                <div class="calc-field">
+                    <label>Durasi Terjebak Macet (Menit/Hari)</label>
+                    <input type="number" id="input-menit" value="45">
                 </div>
+                <div class="calc-field">
+                    <label>Efisiensi Kendaraan (Km/Liter)</label>
+                    <input type="number" id="input-bbm" value="12">
+                </div>
+                <button class="calc-btn" onclick="hitungKerugianMacet()">Analisis Kerugian</button>
                 <div class="calc-result-box" id="calc-result-text">
-                    Isi kolom di atas untuk mengetahui jumlah estimasi bensin terbuang percuma saat kendaraan Anda diam di jalan tol/raya.
+                    Uang bensin terbuang percuma saat idling akan tampil di sini.
                 </div>
             </div>
+
+            <!-- [NEW] COMBINED NEW FEATURES: ROUTE SCORECARD & MOOD AUDIO MATCH -->
+            <div class="chart-card" style="gap: 15px;">
+                <div>
+                    <h3><i class="fa-solid fa-map-location-dot" style="color:#6b8c85"></i> Skor Kelayakan Alternatif</h3>
+                    <select class="custom-select" id="route-selector" onchange="updateRouteFeasibility()">
+                        <option value="sudirman">Via Jalur Sudirman-Thamrin</option>
+                        <option value="casablanca">Via Jalur Kasablanka Flyover</option>
+                        <option value="gatot">Via Arteri Gatot Subroto</option>
+                    </select>
+                    <div id="route-score-area" style="margin-top:8px;">
+                        <span class="score-badge" style="background:var(--pastel-green); color:#1b4332;"><i class="fa-solid fa-circle-check"></i> Skor: 85/100 (Sangat Layak Lewat)</span>
+                    </div>
+                </div>
+
+                <div style="border-top: 1px solid #edf2f4; padding-top: 10px;">
+                    <h3 style="margin-bottom:10px;"><i class="fa-solid fa-headphones-simple" style="color:#fb6f92"></i> Traffic Audio Recommendation</h3>
+                    <div class="mood-box">
+                        <div class="mood-icon" id="mood-icon-fa"><i class="fa-solid fa-music"></i></div>
+                        <div class="mood-details">
+                            <h5 id="mood-title">Chill Lofi Pastel Beats</h5>
+                            <p id="mood-desc">Macet santai, turunkan tensi stress Anda dengan ketukan lofi lembut.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 
     <script>
-        // INISIALISASI GRAFIK FLUKTUASI DENGAN WARNA PASTEL
+        // INISIALISASI GRAFIK UTAMA
+        let chartInstance;
         const ctx = document.getElementById('trafficWaveChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'],
-                datasets: [
-                    {
-                        label: 'Hari Kerja (Rata-rata % Kepadatan)',
-                        data: [20, 85, 45, 55, 35, 70, 90, 40],
-                        borderColor: '#84a59d', /* Pastel Sage */
-                        backgroundColor: 'rgba(132, 165, 157, 0.15)',
-                        fill: true, tension: 0.4, borderWidth: 3
-                    },
-                    {
-                        label: 'Akhir Pekan (Rata-rata % Kepadatan)',
-                        data: [10, 30, 50, 65, 60, 55, 45, 30],
-                        borderColor: '#ffcad4', /* Pastel Pink */
-                        backgroundColor: 'rgba(255, 204, 213, 0.15)',
-                        fill: true, tension: 0.4, borderWidth: 3
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { labels: { font: { family: 'Plus Jakarta Sans', weight: 600 } } } },
-                scales: { y: { beginAtZero: true, max: 100 } }
-            }
-        });
+        
+        const baseDayData = [20, 80, 45, 55, 35, 75, 90, 40];
+        const baseWeekendData = [10, 35, 55, 60, 58, 50, 40, 25];
 
-        // FITUR 2 SIMULATOR: LIVE LOG SCANNER AUTOMATION
-        const lokasiSampel = ["Gatot Subroto", "Casablanca", "Tol JORR Km 12", "Bundaran HI", "Salemba Raya", "Slipi Penjernihan"];
-        const tipeInsiden = [
-            { teks: "mengalami penyempitan lajur proyek pembangunan.", warna: "#ffeb3b" },
-            { teks: "padat merayap imbas volume kendaraan jam kantor.", warna: "#ffeb3b" },
-            { teks: "macet total akibat gangguan bus mogok di lajur kiri.", warna: "#ca0b4a" },
-            { teks: "lancar terkendali, cuaca berawan.", warna: "#2d6a4f" }
+        function buildChart(multiplier = 1) {
+            if (chartInstance) { chartInstance.destroy(); }
+
+            const finalDayData = baseDayData.map(val => Math.min(100, Math.round(val * multiplier)));
+            const finalWeekendData = baseWeekendData.map(val => Math.min(100, Math.round(val * multiplier)));
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'],
+                    datasets: [
+                        {
+                            label: 'Hari Kerja (% Kepadatan)',
+                            data: finalDayData,
+                            borderColor: '#84a59d',
+                            backgroundColor: 'rgba(132, 165, 157, 0.12)',
+                            fill: true, tension: 0.4, borderWidth: 3
+                        },
+                        {
+                            label: 'Akhir Pekan (% Kepadatan)',
+                            data: finalWeekendData,
+                            borderColor: '#ffcad4',
+                            backgroundColor: 'rgba(255, 204, 213, 0.12)',
+                            fill: true, tension: 0.4, borderWidth: 3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { labels: { font: { family: 'Plus Jakarta Sans', weight: 600 } } } },
+                    scales: { y: { beginAtZero: true, max: 100 } }
+                }
+            });
+        }
+
+        // NEW FEATURE 1 ENGINE: UBAH GRAFIK BERDASARKAN CUACA
+        function changeWeatherFactor(type) {
+            document.querySelectorAll('.weather-btn').forEach(btn => btn.classList.remove('active'));
+            let multiplier = 1;
+            
+            if (type === 'clear') {
+                document.getElementById('w-clear').classList.add('active');
+                document.getElementById('kpi-traffic').innerText = "42%";
+                document.getElementById('kpi-speed').innerText = "24 Km/Jam";
+                updateAudioRecommendation('sedang');
+            } else if (type === 'drizzle') {
+                document.getElementById('w-drizzle').classList.add('active');
+                multiplier = 1.15;
+                document.getElementById('kpi-traffic').innerText = "58%";
+                document.getElementById('kpi-speed').innerText = "19 Km/Jam";
+                updateAudioRecommendation('sedang');
+            } else if (type === 'storm') {
+                document.getElementById('w-storm').classList.add('active');
+                multiplier = 1.35;
+                document.getElementById('kpi-traffic').innerText = "89%";
+                document.getElementById('kpi-speed').innerText = "8 Km/Jam";
+                updateAudioRecommendation('parah');
+            }
+            buildChart(multiplier);
+        }
+
+        // NEW FEATURE 2 ENGINE: SELEKTOR SKOR JALUR
+        function updateRouteFeasibility() {
+            const select = document.getElementById("route-selector").value;
+            const area = document.getElementById("route-score-area");
+
+            if (select === 'sudirman') {
+                area.innerHTML = `<span class="score-badge" style="background:var(--pastel-green); color:#1b4332;"><i class="fa-solid fa-circle-check"></i> Skor: 85/100 (Sangat Layak Lewat)</span>`;
+            } else if (select === 'casablanca') {
+                area.innerHTML = `<span class="score-badge" style="background:var(--pastel-yellow); color:#856404;"><i class="fa-solid fa-triangle-exclamation"></i> Skor: 51/100 (Padat - Agak Tersendat)</span>`;
+            } else if (select === 'gatot') {
+                area.innerHTML = `<span class="score-badge" style="background:var(--pastel-red); color:#ca0b4a;"><i class="fa-solid fa-circle-xmark"></i> Skor: 28/100 (Danger - Hindari Jalur Ini)</span>`;
+            }
+        }
+
+        // NEW FEATURE 3 ENGINE: REKOMENDASI AUDIO AUTOMATION
+        function updateAudioRecommendation(condition) {
+            const title = document.getElementById("mood-title");
+            const desc = document.getElementById("mood-desc");
+            const icon = document.getElementById("mood-icon-fa");
+
+            if(condition === 'parah') {
+                title.innerText = "Deep Meditation & Podcast Relaksasi";
+                desc.innerText = "Macet total terdeteksi. Dengarkan materi audio santai berdurasi panjang agar emisi emosi tetap terjaga.";
+                icon.innerHTML = `<i class="fa-solid fa-brain"></i>`;
+            } else {
+                title.innerText = "Chill Lofi Pastel Beats";
+                desc.innerText = "Macet santai, turunkan tensi stress Anda dengan ketukan lofi lembut.";
+                icon.innerHTML = `<i class="fa-solid fa-music"></i>`;
+            }
+        }
+
+        // CORE FEATURE ENGINE: LIVE INCIDENT UPDATER (AUTOMATED TIMER FEED)
+        const sampleStreets = ["Slipi", "Kuningan", "Tol Tomang", "Kramat Raya", "Manggarai", "Mampang Prapatan"];
+        const sampleIncidents = [
+            { txt: "padat merayap efek bubaran proyek drainase.", col: "#856404" },
+            { txt: "lancar bebas hambatan, kecepatan rata-rata meningkat.", col: "#2d6a4f" },
+            { txt: "macet total akibat genangan air setinggi 15cm.", col: "#ca0b4a" }
         ];
 
         setInterval(() => {
-            const container = document.getElementById("live-scanner-box");
-            const waktu = new Date();
-            const jamMenit = `${waktu.getHours().toString().padStart(2, '0')}:${waktu.getMinutes().toString().padStart(2, '0')}`;
+            const box = document.getElementById("live-scanner-box");
+            const now = new Date();
+            const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
             
-            const randLokasi = lokasiSampel[Math.floor(Math.random() * lokasiSampel.length)];
-            const randInsiden = tipeInsiden[Math.floor(Math.random() * tipeInsiden.length)];
+            const street = sampleStreets[Math.floor(Math.random() * sampleStreets.length)];
+            const incident = sampleIncidents[Math.floor(Math.random() * sampleIncidents.length)];
 
-            const logBaru = document.createElement("div");
-            logBaru.className = "scanner-log";
-            logBaru.innerHTML = `
-                <div class="indicator-dot" style="background:${randInsiden.warna};"></div>
-                <div><b>[${jamMenit}]</b> Wilayah ${randLokasi} ${randInsiden.teks}</div>
+            const log = document.createElement("div");
+            log.className = "scanner-log";
+            log.innerHTML = `
+                <div class="indicator-dot" style="background:${incident.col};"></div>
+                <div><b>[${timeStr}]</b> Area ${street} ${incident.txt}</div>
             `;
+            box.insertBefore(log, box.firstChild);
+            if (box.children.length > 4) { box.removeChild(box.lastChild); }
+        }, 7000);
 
-            container.insertBefore(logBaru, container.firstChild);
-            if(container.children.length > 5) { container.removeChild(container.lastChild); }
-        }, 6000); // Update otomatis setiap 6 detik
-
-        // FITUR 3 SIMULATOR: LOGIKA KALKULATOR BIAYA MACET
+        // CORE FEATURE ENGINE: KALKULATOR RUGI MACET
         function hitungKerugianMacet() {
             let mnt = parseFloat(document.getElementById("input-menit").value) || 0;
-            let bbmRatio = parseFloat(document.getElementById("input-bbm").value) || 12;
+            let ratio = parseFloat(document.getElementById("input-bbm").value) || 12;
 
-            // Rumus perkiraan kasar: saat idling/macet total, mobil membakar ~1.2 Liter bensin per jam
-            let jamMacetSebulan = (mnt / 60) * 22; // 22 hari kerja
-            let bensinTerbuang = jamMacetSebulan * 1.2; 
-            let hargaBensin = 13800; // Asumsi rata-rata harga BBM Rp13.800/liter
-            let totalKerugianDuit = Math.round(bensinTerbuang * hargaBensin);
+            let jamMacetSebulan = (mnt / 60) * 22; 
+            let bensinTerbuang = jamMacetSebulan * 1.25; 
+            let duitHilang = Math.round(bensinTerbuang * 13850); 
 
             document.getElementById("calc-result-text").innerHTML = `
-                💥 <b>Hasil Analisis Bulanan:</b><br>
-                Anda membuang waktu sekitar <b>${jamMacetSebulan.toFixed(1)} Jam</b> sia-sia di jalan raya. <br>
-                BBM yang terbakar percuma: <b>${bensinTerbuang.toFixed(1)} Liter</b>, setara dengan kehilangan uang sebesar 
-                <span style="color:#ca0b4a; font-weight:700;">Rp ${totalKerugianDuit.toLocaleString('id-ID')}</span> per bulan!
+                📌 <b>Kalkulasi Kerugian:</b><br>
+                Waktu terbuang: <b>${jamMacetSebulan.toFixed(1)} Jam/bulan</b>.<br>
+                BBM Hangus: <b>${bensinTerbuang.toFixed(1)} Liter</b>.<br>
+                Rugi Finansial: <span style="color:#ca0b4a;"><b>Rp ${duitHilang.toLocaleString('id-ID')}</b></span>
             `;
         }
+
+        // Run Onload
+        window.onload = function() {
+            buildChart(1);
+            hitungKerugianMacet();
+        };
     </script>
 </body>
 </html>
