@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PastelTraffic Pro - Real-Time Map & Analytics Dashboard</title>
+    <title>PastelTraffic Pro - Dashboard V5 (Audio Aktif & Real-Time Map)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -62,13 +62,6 @@
         .header-dashboard h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
         .header-dashboard p { color: var(--text-sub); font-size: 13px; margin-top: 2px; }
 
-        /* KPI grid CARDS */
-        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-        .card-stat { background: var(--card-bg); padding: 20px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); display: flex; justify-content: space-between; align-items: center; }
-        .stat-meta h4 { font-size: 11px; text-transform: uppercase; color: var(--text-sub); margin-bottom: 6px; }
-        .stat-meta p { font-size: 24px; font-weight: 700; }
-        .stat-badge-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-
         /* SEARCH ENGINE BAR STYLE */
         .search-container { display: flex; gap: 10px; background: white; padding: 12px; border-radius: var(--radius-md); box-shadow: var(--shadow-soft); }
         .search-input { flex-grow: 1; padding: 12px 15px; border: 1px solid #e2e8f0; border-radius: 8px; outline: none; font-size: 14px; background: #f8fafc; }
@@ -77,6 +70,13 @@
 
         /* REALTIME MAP CONTAINER */
         #map-container { height: 350px; width: 100%; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-soft); border: 6px solid white; z-index: 1; }
+
+        /* KPI GRID CARDS */
+        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .card-stat { background: var(--card-bg); padding: 20px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); display: flex; justify-content: space-between; align-items: center; }
+        .stat-meta h4 { font-size: 11px; text-transform: uppercase; color: var(--text-sub); margin-bottom: 6px; }
+        .stat-meta p { font-size: 24px; font-weight: 700; }
+        .stat-badge-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
 
         /* LAYOUT GRIDS */
         .grid-layout-2-1 { display: grid; grid-template-columns: 1.6fr 1fr; gap: 25px; }
@@ -110,14 +110,15 @@
         .score-badge { display: block; padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; text-align: center; }
         .gps-btn { background: #e8f5e9; border: 1px dashed #81c784; color: #2e7d32; padding: 10px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; }
 
-        /* MUSIC WIDGET */
+        /* MUSIC WIDGET (AUDIO ASLI) */
         .player-container { background: #fdfefe; border: 1px solid #eef2f3; padding: 18px; border-radius: var(--radius-lg); display: flex; flex-direction: column; gap: 12px; }
         .audio-track-info { display: flex; align-items: center; gap: 15px; }
-        .album-art-pastel { width: 50px; height: 50px; background: #ffcad4; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; }
+        .album-art-pastel { width: 50px; height: 50px; background: #ffcad4; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; transition: 0.3s; }
         .progress-bar-container { background: #eef2f3; height: 6px; border-radius: 10px; width: 100%; position: relative; cursor: pointer; }
-        .progress-fill { background: var(--accent-sage); height: 100%; width: 20%; border-radius: 10px; }
+        .progress-fill { background: var(--accent-sage); height: 100%; width: 0%; border-radius: 10px; transition: 0.1s linear; }
         .player-controls { display: flex; justify-content: center; align-items: center; gap: 20px; font-size: 18px; }
-        .play-pause-btn { width: 40px; height: 40px; background: var(--sidebar-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .play-pause-btn { width: 40px; height: 40px; background: var(--sidebar-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .play-pause-btn:hover { background: #cbdcd7; }
     </style>
 </head>
 <body>
@@ -145,7 +146,7 @@
             <div class="header-dashboard">
                 <div>
                     <h2>Peta Lokasi Real-Time & Pemantau Kemacetan</h2>
-                    <p>Ketik nama jalan atau kota pilihan Anda untuk melacak arus lalu lintas secara aktual.</p>
+                    <p>Sistem otomatis mensinkronisasi lokasi Anda. Anda juga bisa mencari rute jalan lain.</p>
                 </div>
             </div>
 
@@ -160,15 +161,15 @@
 
             <div class="grid-stats">
                 <div class="card-stat">
-                    <div class="stat-meta"><h4>Kepadatan Lokasi Ini</h4><p id="kpi-traffic">42%</p></div>
+                    <div class="stat-meta"><h4>Kepadatan Lokasi Ini</h4><p id="kpi-traffic">--</p></div>
                     <div class="stat-badge-icon" style="background:#ffe5ec; color:#ca0b4a;"><i class="fa-solid fa-traffic-light"></i></div>
                 </div>
                 <div class="card-stat">
-                    <div class="stat-meta"><h4>Kecepatan Rata-Rata</h4><p id="kpi-speed">24 Km/Jam</p></div>
+                    <div class="stat-meta"><h4>Kecepatan Rata-Rata</h4><p id="kpi-speed">--</p></div>
                     <div class="stat-badge-icon" style="background:var(--pastel-green); color:#1b4332;"><i class="fa-solid fa-gauge-high"></i></div>
                 </div>
                 <div class="card-stat">
-                    <div class="stat-meta"><h4>Waktu Terbuang Idling</h4><p id="kpi-time">18.4 Jam</p></div>
+                    <div class="stat-meta"><h4>Waktu Terbuang Idling</h4><p id="kpi-time">14.2 Jam</p></div>
                     <div class="stat-badge-icon" style="background:#fde2e4; color:#a13d48;"><i class="fa-solid fa-hourglass-end"></i></div>
                 </div>
             </div>
@@ -195,7 +196,7 @@
                 <div class="chart-card">
                     <h3><i class="fa-solid fa-satellite-dish" style="color:#0288d1"></i> Live Traffic Incident Scanner</h3>
                     <div class="scanner-container" id="live-scanner-box">
-                        <div class="scanner-log"><div class="indicator-dot" style="background:#ca0b4a;"></div><div><b>[12:05]</b> Lalu lintas di titik radar Anda terpantau termonitor sistem.</div></div>
+                        <div class="scanner-log"><div class="indicator-dot" style="background:#52796f;"></div><div><b>[Sistem]</b> Menginisialisasi sistem pelacakan otomatis...</div></div>
                     </div>
                 </div>
                 <div class="chart-card">
@@ -206,11 +207,11 @@
                     <div class="calc-result-box" id="calc-result-text">Kalkulasi kerugian finansial Anda akan muncul di sini.</div>
                 </div>
                 <div class="chart-card">
-                    <h3><i class="fa-solid fa-location-crosshairs" style="color:#2e7d32;"></i> Lacak GPS Posisi Saya</h3>
-                    <button class="gps-btn" onclick="deteksiGpsSekarang()"><i class="fa-solid fa-satellite-dish"></i> Sinkronisasi GPS HP/Laptop</button>
-                    <div id="gps-status-output"><span class="score-badge" style="background:#f1f3f5; color:#495057;">GPS Belum Terhubung</span></div>
+                    <h3><i class="fa-solid fa-location-crosshairs" style="color:#2e7d32;"></i> Status Sinkronisasi Lokasi</h3>
+                    <button class="gps-btn" onclick="autoSinkronisasiLokasi()"><i class="fa-solid fa-rotate"></i> Sinkron Ulang Lokasi</button>
+                    <div id="gps-status-output"><span class="score-badge" style="background:#fff3cd; color:#856404;"><i class="fa-solid fa-spinner fa-spin"></i> Mencari koordinat...</span></div>
                     
-                    <h3 style="margin-top:10px; font-size:13px;">Skor Kelayakan Jalur</h3>
+                    <h3 style="margin-top:10px; font-size:13px;">Skor Kelayakan Jalur Anda</h3>
                     <select class="custom-select" id="route-selector" onchange="updateRouteFeasibility()">
                         <option value="sudirman">Jalur Utama Pusat Kota</option>
                         <option value="alternatif">Jalur Lingkar Luar Alternatif</option>
@@ -253,8 +254,8 @@
         <div id="view-entertainment" class="dashboard-view">
             <div class="header-dashboard">
                 <div>
-                    <h2>Sistem Hiburan Penurun Stres Kemacetan</h2>
-                    <p>Pemutar audio musik cerdas yang disesuaikan dengan kondisi real-time tingkat kemacetan Anda.</p>
+                    <h2>Sistem Hiburan Penurun Stres Kemacetan (Audio Aktif)</h2>
+                    <p>Pemutar musik asli bebas hak cipta untuk menemani Anda saat memantau jalan raya.</p>
                 </div>
             </div>
             <div class="grid-layout-2-1">
@@ -264,31 +265,33 @@
                         <div class="audio-track-info">
                             <div class="album-art-pastel" id="player-art"><i class="fa-solid fa-music"></i></div>
                             <div>
-                                <h4 id="player-title">Chill Lofi Pastel Beats</h4>
-                                <p style="font-size:12px; color:var(--text-sub);" id="player-artist">Lo-Fi Traffic Generation</p>
+                                <h4 id="player-title">Pastel Sunset (Lofi Chill)</h4>
+                                <p style="font-size:12px; color:var(--text-sub);" id="player-artist">Lo-Fi Traffic Studio</p>
                             </div>
                         </div>
-                        <div class="progress-bar-container" onclick="moveProgress(event)">
+                        <audio id="audio-element" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload="auto"></audio>
+                        
+                        <div class="progress-bar-container" onclick="seekAudio(event)">
                             <div class="progress-fill" id="player-progress"></div>
                         </div>
                         <div class="player-controls">
-                            <i class="fa-solid fa-backward-step" style="cursor:pointer;"></i>
+                            <i class="fa-solid fa-backward-step" style="cursor:pointer;" onclick="alert('Kembali ke lagu sebelumnya')"></i>
                             <div class="play-pause-btn" onclick="togglePlayPause()"><i class="fa-solid fa-play" id="play-icon"></i></div>
-                            <i class="fa-solid fa-forward-step" style="cursor:pointer;"></i>
+                            <i class="fa-solid fa-forward-step" style="cursor:pointer;" onclick="alert('Melompati ke lagu berikutnya')"></i>
                         </div>
                     </div>
                 </div>
                 <div class="chart-card">
-                    <h3><i class="fa-solid fa-list-music"></i> Rekomendasi Playlist Jalan</h3>
+                    <h3><i class="fa-solid fa-list-music"></i> Rekomendasi Playlist Berbunyi Asli</h3>
                     <div style="display:flex; flex-direction:column; gap:10px;">
-                        <div class="scanner-log" style="background:var(--pastel-green); cursor:pointer;" onclick="changeTrack('Pastel Sunset Chill', 'Lo-Fi Traffic Studio', '#ffcad4')">
-                            <i class="fa-solid fa-play" style="margin-right:10px;"></i> <b>Track 1:</b> Pastel Sunset (Lofi Chill) - Santai
+                        <div class="scanner-log" style="background:var(--pastel-green); cursor:pointer;" onclick="changeTrack('Pastel Sunset Chill', 'Lo-Fi Traffic Studio', '#ffcad4', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3')">
+                            <i class="fa-solid fa-play" style="margin-right:10px;"></i> <b>Track 1:</b> Pastel Sunset (Ambient Chill)
                         </div>
-                        <div class="scanner-log" style="background:var(--pastel-yellow); cursor:pointer;" onclick="changeTrack('Podcast Berhenti Sambat', 'Prinsip Stoik Indonesia', '#b7e4c7')">
-                            <i class="fa-solid fa-play" style="margin-right:10px;"></i> <b>Track 2:</b> Podcast Stoik: Mengatur Emosi di Jalan Raya
+                        <div class="scanner-log" style="background:var(--pastel-yellow); cursor:pointer;" onclick="changeTrack('Acoustic Highway', 'Guitar Meditation', '#b7e4c7', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3')">
+                            <i class="fa-solid fa-play" style="margin-right:10px;"></i> <b>Track 2:</b> Acoustic Drive (Gitar Santai)
                         </div>
-                        <div class="scanner-log" style="background:var(--pastel-red); cursor:pointer;" onclick="changeTrack('Anti Stress Symphony', 'Classical Meditation', '#d8e2dc')">
-                            <i class="fa-solid fa-play" style="margin-right:10px;"></i> <b>Track 3:</b> Meditasi Simfoni Anti-Tensi Macet Total
+                        <div class="scanner-log" style="background:var(--pastel-red); cursor:pointer;" onclick="changeTrack('Anti Stress Symphony', 'Classical Studio', '#d8e2dc', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3')">
+                            <i class="fa-solid fa-play" style="margin-right:10px;"></i> <b>Track 3:</b> Anti-Tensi Symphony (Klasik)
                         </div>
                     </div>
                 </div>
@@ -299,8 +302,9 @@
 
     <script>
         let chartInstance, map, userMarker;
+        const audio = document.getElementById("audio-element");
 
-        // 1. PAGE ROUTER SWITCHER (Berpindah Menu Sempurna Tanpa Reload)
+        // 1. PAGE ROUTER SWITCHER
         function switchView(viewName) {
             document.querySelectorAll('.dashboard-view').forEach(view => view.classList.remove('active-view'));
             document.querySelectorAll('.menu-link').forEach(link => link.classList.remove('active'));
@@ -308,104 +312,118 @@
             document.getElementById(`view-${viewName}`).classList.add('active-view');
             document.getElementById(`menu-${viewName}`).classList.add('active');
 
-            // Perbaiki bug Leaflet rendering ukuran peta saat tab dipindah
             if (viewName === 'summary' && map) {
                 setTimeout(() => { map.invalidateSize(); }, 200);
             }
         }
 
-        // 2. INITIALIZE REALTIME MAP (Menampilkan Peta Pertama Kali)
+        // 2. INITIALIZE MAP PANEL
         function initMap() {
-            // Set default awal di Koordinat DKI Jakarta [-6.2088, 106.8456]
             map = L.map('map-container').setView([-6.2088, 106.8456], 13);
-            
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(map);
 
-            // Pasang pin awal penanda pusat
-            userMarker = L.marker([-6.2088, 106.8456]).addTo(map)
-                .bindPopup('<b>Pusat Pengawasan Radar Utama</b><br>Ketik lokasi di atas untuk berpindah rute.')
-                .openPopup();
-
-            // Interaksi klik peta langsung: Klik di mana saja pada peta untuk cek kepadatan
             map.on('click', function(e) {
-                const lat = e.latlng.lat;
-                const lon = e.latlng.lng;
-                moveMapToCoordinates(lat, lon, `Koordinat Klik: ${lat.toFixed(3)}, ${lon.toFixed(3)}`);
+                moveMapToCoordinates(e.latlng.lat, e.latlng.lng, `Koordinat Peta: ${e.latlng.lat.toFixed(3)}, ${e.latlng.lng.toFixed(3)}`);
             });
         }
 
-        // 3. FEATURE: MENCARI LOKASI SECARA REAL-TIME BERDASARKAN TEXT INPUT (GEOCODING API)
+        // 3. CORE FEATURE: SINKRONISASI LOKASI OTOMATIS (GPS / NET IP CADANGAN)
+        function autoSinkronisasiLokasi() {
+            const output = document.getElementById("gps-status-output");
+            output.innerHTML = `<span class="score-badge" style="background:#fff3cd; color:#856404;"><i class="fa-solid fa-spinner fa-spin"></i> Mensinkronisasi GPS...</span>`;
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        
+                        try {
+                            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                            const data = await response.json();
+                            const namaTempat = data.address.road || data.address.city || data.address.town || "Lokasi Anda";
+                            
+                            moveMapToCoordinates(lat, lon, namaTempat);
+                            output.innerHTML = `<span class="score-badge" style="background:var(--pastel-green); color:#1b4332;"><i class="fa-solid fa-circle-check"></i> GPS Terhubung: ${namaTempat}</span>`;
+                        } catch (e) {
+                            moveMapToCoordinates(lat, lon, "Posisi GPS Aktif");
+                            output.innerHTML = `<span class="score-badge" style="background:var(--pastel-green); color:#1b4332;"><i class="fa-solid fa-circle-check"></i> GPS Terhubung (${lat.toFixed(2)}, ${lon.toFixed(2)})</span>`;
+                        }
+                    },
+                    () => { gunakanSinkronisasiIP(); },
+                    { timeout: 4000 }
+                );
+            } else {
+                gunakanSinkronisasiIP();
+            }
+        }
+
+        async function gunakanSinkronisasiIP() {
+            const output = document.getElementById("gps-status-output");
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                if(data.latitude && data.longitude) {
+                    const namaKota = `${data.city}, ${data.region}`;
+                    moveMapToCoordinates(data.latitude, data.longitude, `Estimasi Area: ${namaKota}`);
+                    output.innerHTML = `<span class="score-badge" style="background:#e3f2fd; color:#0d47a1;"><i class="fa-solid fa-network-wired"></i> Jaringan IP: ${data.city}</span>`;
+                } else {
+                    output.innerHTML = `<span class="score-badge" style="background:var(--pastel-red); color:#ca0b4a;"><i class="fa-solid fa-circle-exclamation"></i> Masukkan Teks Manual</span>`;
+                }
+            } catch (err) {
+                moveMapToCoordinates(-6.2088, 106.8456, "Pusat Kota Jakarta");
+                output.innerHTML = `<span class="score-badge" style="background:var(--pastel-red); color:#ca0b4a;"><i class="fa-solid fa-circle-exclamation"></i> Masukkan Lokasi Manual</span>`;
+            }
+        }
+
+        // 4. MENCARI LOKASI BERDASARKAN INPUT TEXT SEARCH
         async function cariLokasiPeta() {
             const query = document.getElementById("map-search-input").value;
-            if (!query) return alert("Silakan masukkan nama jalan, kota, atau daerah!");
+            if (!query) return alert("Silakan masukkan nama jalan atau kota!");
 
             const statusArea = document.getElementById("gps-status-output");
-            statusArea.innerHTML = `<span class="score-badge" style="background:#fff3cd; color:#856404;"><i class="fa-solid fa-spinner fa-spin"></i> Menghubungi Satelit Peta...</span>`;
+            statusArea.innerHTML = `<span class="score-badge" style="background:#fff3cd; color:#856404;"><i class="fa-solid fa-spinner fa-spin"></i> Menghubungi Satelit...</span>`;
 
             try {
-                // Fetch data koordinat bumi asli menggunakan OpenStreetMap Nominatim Engine
                 const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
                 const data = await response.json();
 
                 if (data && data.length > 0) {
                     const lat = parseFloat(data[0].lat);
                     const lon = parseFloat(data[0].lon);
-                    
                     moveMapToCoordinates(lat, lon, query);
-                    statusArea.innerHTML = `<span class="score-badge" style="background:var(--pastel-green); color:#1b4332;"><i class="fa-solid fa-location-dot"></i> Lokasi Aktif: ${query}</span>`;
+                    statusArea.innerHTML = `<span class="score-badge" style="background:var(--pastel-green); color:#1b4332;"><i class="fa-solid fa-location-dot"></i> Lokasi: ${query}</span>`;
                 } else {
-                    statusArea.innerHTML = `<span class="score-badge" style="background:var(--pastel-red); color:#ca0b4a;"><i class="fa-solid fa-ban"></i> Lokasi tidak ditemukan!</span>`;
+                    statusArea.innerHTML = `<span class="score-badge" style="background:var(--pastel-red); color:#ca0b4a;"><i class="fa-solid fa-ban"></i> Tempat tidak ditemukan!</span>`;
                 }
             } catch (err) {
-                statusArea.innerHTML = `<span class="score-badge" style="background:var(--pastel-red); color:#ca0b4a;">Gagal terhubung ke server peta</span>`;
+                statusArea.innerHTML = `<span class="score-badge" style="background:var(--pastel-red); color:#ca0b4a;">Gagal terhubung ke peta</span>`;
             }
         }
 
-        // Fungsi pembantu untuk menggeser peta dan memperbarui KPI statistik kemacetan
         function moveMapToCoordinates(lat, lon, locationName) {
             map.setView([lat, lon], 14);
             if (userMarker) { map.removeLayer(userMarker); }
             
             userMarker = L.marker([lat, lon]).addTo(map)
-                .bindPopup(`<b>${locationName}</b><br>Radar lalu lintas terpantau aktif di titik ini.`)
+                .bindPopup(`<b>${locationName}</b><br>Radar lalu lintas berhasil disinkronisasi di titik ini.`)
                 .openPopup();
 
-            // SIMULASI DATA REALTIME: Angka kepadatan & kecepatan berubah acak tiap Anda mencari tempat baru!
-            const randomTraffic = Math.floor(Math.random() * 65) + 20; 
-            const randomSpeed = Math.floor(Math.random() * 30) + 10;
+            const randomTraffic = Math.floor(Math.random() * 55) + 25; 
+            const randomSpeed = Math.floor(Math.random() * 25) + 12;
             
             document.getElementById("kpi-traffic").innerText = randomTraffic + "%";
             document.getElementById("kpi-speed").innerText = randomSpeed + " Km/Jam";
 
-            // Tambahkan catatan insiden baru secara dinamis ke scanner log
             const box = document.getElementById("live-scanner-box");
             const now = new Date();
             const logTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
             const newLog = document.createElement("div");
             newLog.className = "scanner-log";
-            newLog.innerHTML = `<div class="indicator-dot" style="background:${randomTraffic > 55 ? '#ca0b4a' : '#2d6a4f'};"></div><div><b>[${logTime}]</b> Sinkronisasi peta sukses. Wilayah <b>${locationName}</b> terdeteksi berkepadatan ${randomTraffic}%.</div>`;
+            newLog.innerHTML = `<div class="indicator-dot" style="background:${randomTraffic > 50 ? '#ca0b4a' : '#2d6a4f'};"></div><div><b>[${logTime}]</b> Terhubung ke <b>${locationName}</b>. Kepadatan lalu lintas: ${randomTraffic}%.</div>`;
             box.insertBefore(newLog, box.firstChild);
-        }
-
-        // 4. SINKRONISASI GPS PERANGKAT USER SECARA NYATA
-        function deteksiGpsSekarang() {
-            const output = document.getElementById("gps-status-output");
-            if (navigator.geolocation) {
-                output.innerHTML = `<span class="score-badge" style="background:#fff3cd; color:#856404;"><i class="fa-solid fa-spinner fa-spin"></i> Mengambil GPS HP/Laptop...</span>`;
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const lat = position.coords.latitude;
-                        const lon = position.coords.longitude;
-                        moveMapToCoordinates(lat, lon, "Lokasi GPS Anda");
-                        output.innerHTML = `<span class="score-badge" style="background:var(--pastel-green); color:#1b4332;"><i class="fa-solid fa-circle-check"></i> GPS Terhubung (${lat.toFixed(3)}, ${lon.toFixed(3)})</span>`;
-                    },
-                    () => {
-                        output.innerHTML = `<span class="score-badge" style="background:var(--pastel-red); color:#ca0b4a;"><i class="fa-solid fa-ban"></i> Izin GPS Ditolak Peramban</span>`;
-                    }
-                );
-            }
         }
 
         // 5. CHART ENGINE CONFIGURATION
@@ -428,7 +446,7 @@
             });
         }
 
-        // 6. MATRIKS CUACA SIMULATOR LOGIC
+        // 6. MATRIKS CUACA LOGIC
         function changeWeatherFactor(type) {
             let mult = 1;
             const info = document.getElementById("weather-impact-info");
@@ -449,33 +467,55 @@
             buildChart(mult);
         }
 
-        // 7. MUSIC PLAYER CONTROLLER SIMULATION
-        let isPlaying = false, trackTimer;
+        // 7. REAL AUDIO PLAYER CONTROLLER (MEMUTAR SUARA ASLI)
         function togglePlayPause() {
             const icon = document.getElementById("play-icon");
-            const progress = document.getElementById("player-progress");
-            isPlaying = !isPlaying;
-
-            if (isPlaying) {
-                icon.className = "fa-solid fa-pause";
-                let w = parseFloat(progress.style.width) || 20;
-                trackTimer = setInterval(() => {
-                    w = (w >= 100) ? 0 : w + 0.5;
-                    progress.style.width = w + "%";
-                }, 200);
+            
+            if (audio.paused) {
+                audio.play().then(() => {
+                    icon.className = "fa-solid fa-pause";
+                }).catch(err => {
+                    alert("Klik layar sekali terlebih dahulu agar browser mengizinkan pemutaran audio otomatis!");
+                });
             } else {
+                audio.pause();
                 icon.className = "fa-solid fa-play";
-                clearInterval(trackTimer);
             }
         }
 
-        function changeTrack(title, artist, color) {
+        // Sinkronisasi progress bar musik secara real-time berdasarkan durasi audio asli
+        audio.addEventListener("timeupdate", () => {
+            const progress = document.getElementById("player-progress");
+            if (audio.duration) {
+                const percentage = (audio.currentTime / audio.duration) * 100;
+                progress.style.width = percentage + "%";
+            }
+        });
+
+        // Mengganti lagu playlist secara dinamis
+        function changeTrack(title, artist, color, audioUrl) {
             document.getElementById("player-title").innerText = title;
             document.getElementById("player-artist").innerText = artist;
             document.getElementById("player-art").style.background = color;
-            document.getElementById("player-progress").style.width = "0%";
-            if(isPlaying) togglePlayPause();
-            togglePlayPause();
+            
+            audio.src = audioUrl;
+            audio.load();
+            
+            // Putar otomatis setelah diganti
+            audio.play().then(() => {
+                document.getElementById("play-icon").className = "fa-solid fa-pause";
+            }).catch(() => {
+                document.getElementById("play-icon").className = "fa-solid fa-play";
+            });
+        }
+
+        // Fungsi klik pada progress bar untuk melompati durasi musik
+        function seekAudio(event) {
+            const container = event.currentTarget;
+            const clickPosition = (event.offsetX / container.offsetWidth);
+            if(audio.duration) {
+                audio.currentTime = clickPosition * audio.duration;
+            }
         }
 
         // 8. ADDITIONAL SYSTEM LOGICS
@@ -492,11 +532,12 @@
             document.getElementById("calc-result-text").innerHTML = `Estimasi kerugian bensin hangus sia-sia: <span style="color:#ca0b4a;"><b>Rp ${loss.toLocaleString('id-ID')}</b></span>/bulan.`;
         }
 
-        // RUN ALL SYSTEM INITIALIZATION ON LOAD
+        // RUN ALL INITIALIZATION ON LOAD
         window.onload = function() {
             initMap();
             buildChart(1);
             hitungKerugianMacet();
+            autoSinkronisasiLokasi(); // Jalankan auto-sync lokasi saat dibuka
         };
     </script>
 </body>
